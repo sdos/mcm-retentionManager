@@ -1,7 +1,10 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/python
+# coding=utf-8
 
 """
-	Project mcm
+	Project MCM - Micro Content Management
+	RetentionManager - Swift API proxy and retention date checker
+
 
 	Copyright (C) <2016> Tim Waizenegger, <University of Stuttgart>
 
@@ -32,18 +35,16 @@ def doAuthGetToken(reqHead):
 	b = r.content
 	h = dict(r.headers)
 	s = r.status_code
-	log.debug("got: {}, {}, {}".format(b,h,s))
+	log.debug("got: {}, {}, {}".format(b, h, s))
 	return (s, h)
 
 
 def doGenericRequest(method, reqUrl, reqHead, reqArgs, reqData):
 	reqHead = stripHeaders(headers=reqHead)
-	r = requests.request(method=method, url=reqUrl, headers = reqHead, params=reqArgs, data=reqData)
+	r = requests.request(method=method, url=reqUrl, headers=reqHead, params=reqArgs, data=reqData)
 	log.debug("doGeneric {}, url: {}, head: {}, args: {}, data: {}".format(method, reqUrl, reqHead, reqArgs, reqData))
 	b = r.content
 	h = dict(r.headers)
 	s = r.status_code
 	log.debug("doGeneric {} swift response: {}, {}, {}".format(method, s, h, b))
 	return (s, h, b)
-
-

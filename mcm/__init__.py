@@ -1,7 +1,10 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/python
+# coding=utf-8
 
 """
-	Project mcm
+	Project MCM - Micro Content Management
+	RetentionManager - Swift API proxy and retention date checker
+
 
 	Copyright (C) <2016> Tim Waizenegger, <University of Stuttgart>
 

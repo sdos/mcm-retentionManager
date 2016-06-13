@@ -1,7 +1,10 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/python
+# coding=utf-8
 
 """
-	Project mcm
+	Project MCM - Micro Content Management
+	RetentionManager - Swift API proxy and retention date checker
+
 
 	Copyright (C) <2016> Tim Waizenegger, <University of Stuttgart>
 
@@ -14,11 +17,14 @@ import logging
 from flask import request, Response, send_file
 import json
 
-from mcm.retentionManager import app, httpBackend, appConfig
+from mcm.retentionManager import app, httpBackend, appConfig, retentionFilter
 from mcm.retentionManager.Exceptions import HttpError
+import mcm.retentionManager.retentionFilter
+
 """WSGI application for the proxy server."""
 
 log = logging.getLogger()
+
 
 ##############################################################################
 # decorators
@@ -28,8 +34,8 @@ def log_requests(f):
 	def logging_wrapper(*args, **kwargs):
 		log.debug("<<<{}>>> handles request: {} {}".format(f.__name__, request.method, request.url))
 		return f(*args, **kwargs)
-	return logging_wrapper
 
+	return logging_wrapper
 
 
 ##############################################################################
@@ -41,17 +47,17 @@ def replaceStorageUrl(swiftResponse):
 		raise HttpError("swift returned wrong storage URL")
 	swiftAuthName = swiftUrl[len(appConfig.swift_storage_url.format("")):]
 	swiftResponse['X-Storage-Url'] = appConfig.proxy_storage_url.format(swiftAuthName)
-	
+
+
 ##############################################################################
 # error handler
 ##############################################################################
 @app.errorhandler(Exception)
 def handle_invalid_usage(e):
-	log.error(e.__str__())
+	if (HttpError == type(e)):
+		return e.to_string(), e.status_code
+	log.exception("internal error")
 	return "Internal Server Error", 500
-
-
-
 
 
 """
@@ -65,6 +71,7 @@ def handle_invalid_usage(e):
 	which is used in further requests
 """
 
+
 @app.route("/auth/v1.0", methods=["GET"])
 @log_requests
 def handle_auth():
@@ -76,51 +83,55 @@ def handle_auth():
 	return Response(response="", status=swiftStatus, headers=swiftHeaders)
 
 
-
-
-
-
-
 """
 	Account functions
 """
-
 
 
 @app.route("/v1/AUTH_<thisAuth>", methods=["HEAD", "POST", "GET", "PUT", "DELETE"])
 @log_requests
 def handle_account(thisAuth):
 	myUrl = appConfig.swift_storage_url.format(thisAuth)
-	log.debug("client request {}, header: {}, args: {} -- content: {}".format(request.method, request.headers, request.args, request.data))
-	s, h, b = httpBackend.doGenericRequest(method=request.method, reqUrl=myUrl, reqHead=request.headers, reqArgs=request.args, reqData=request.data)
+	log.debug(
+		"client request {}, header: {}, args: {} -- content: {}".format(request.method, request.headers, request.args,
+		                                                                request.data))
+	s, h, b = httpBackend.doGenericRequest(method=request.method, reqUrl=myUrl, reqHead=request.headers,
+	                                       reqArgs=request.args, reqData=request.data)
 	return Response(response=b, status=s, headers=h)
 
 
-
-	
 """
 	Container functions
 """
-	
+
+
 @app.route("/v1/AUTH_<thisAuth>/<thisContainer>", methods=["POST", "GET", "PUT", "DELETE"])
 @log_requests
 def handle_container(thisAuth, thisContainer):
 	myUrl = appConfig.swift_storage_url.format(thisAuth)
 	myUrl += "/" + thisContainer
-	log.debug("client request {}, header: {}, args: {} -- content: {}".format(request.method, request.headers, request.args, request.data))
-	s, h, b = httpBackend.doGenericRequest(method=request.method, reqUrl=myUrl, reqHead=request.headers, reqArgs=request.args, reqData=request.data)
+	log.debug(
+		"client request {}, header: {}, args: {} -- content: {}".format(request.method, request.headers, request.args,
+		                                                                request.data))
+	s, h, b = httpBackend.doGenericRequest(method=request.method, reqUrl=myUrl, reqHead=request.headers,
+	                                       reqArgs=request.args, reqData=request.data)
 	return Response(response=b, status=s, headers=h)
-	
+
 
 """
 	Object functions
-"""	
-	
+"""
+
+
 @app.route("/v1/AUTH_<thisAuth>/<thisContainer>/<path:thisObject>", methods=["POST", "GET", "PUT", "DELETE"])
 @log_requests
+@retentionFilter.checkRetentionDate
 def handle_object(thisAuth, thisContainer, thisObject):
 	myUrl = appConfig.swift_storage_url.format(thisAuth)
 	myUrl += "/" + thisContainer + "/" + thisObject
-	log.debug("client request {}, header: {}, args: {} -- content: {}".format(request.method, request.headers, request.args, request.data))
-	s, h, b = httpBackend.doGenericRequest(method=request.method, reqUrl=myUrl, reqHead=request.headers, reqArgs=request.args, reqData=request.data)
+	log.debug(
+		"client request {}, header: {}, args: {} -- content: {}".format(request.method, request.headers, request.args,
+		                                                                request.data))
+	s, h, b = httpBackend.doGenericRequest(method=request.method, reqUrl=myUrl, reqHead=request.headers,
+	                                       reqArgs=request.args, reqData=request.data)
 	return Response(response=b, status=s, headers=h)
