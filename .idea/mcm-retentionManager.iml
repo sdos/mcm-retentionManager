@@ -3,6 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/mcm" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcm/retentionManager" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venvMcmRetention" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.5.1+ virtualenv at ~/uni/src/SDOS-workspace/mcm-retentionManager/venvMcmRetention" jdkType="Python SDK" />

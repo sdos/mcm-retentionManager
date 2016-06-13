@@ -19,7 +19,7 @@ is currently done by setting parameters in
 
 ## Dev setup
 ### first setup after new checkout
-make sure to specify a python 3 or higher interpreter for your virtualenv (SDOS doesn't support python 2)
+make sure to specify a python 3 or higher interpreter for your virtualenv (MCM doesn't support python 2)
 in the main directory
 
 
