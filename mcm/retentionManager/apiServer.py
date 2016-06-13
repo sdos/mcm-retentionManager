@@ -72,6 +72,7 @@ def handle_invalid_usage(e):
 @app.route("/auth/v1.0", methods=["GET"])
 @log_requests
 def handle_auth():
+	print("kjkjkj")
 	clientHeaders = request.headers
 	swiftStatus, swiftHeaders = httpBackend.doAuthGetToken(reqHead=clientHeaders)
 	log.debug("swift response: {}".format(swiftHeaders))

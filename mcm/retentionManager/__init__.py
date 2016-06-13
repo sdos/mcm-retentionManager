@@ -14,12 +14,10 @@
 
 import logging
 from flask import Flask
-import mcm.retentionManager
 from mcm.retentionManager import appConfig
 
 logging.basicConfig(level=appConfig.log_level, format="%(asctime)s - %(module)s -  %(funcName)s - %(levelname)s ##\t  %(message)s")
 log = logging.getLogger()
 
 app = Flask(__name__)
-
 import mcm.retentionManager.apiServer
