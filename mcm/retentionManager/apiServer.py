@@ -12,14 +12,11 @@
 	of the MIT license.  See the LICENSE file for details.
 """
 
-from functools import wraps
 import logging
-from flask import request, Response, send_file
-import json
-
+from functools import wraps
+from flask import request, Response
 from mcm.retentionManager import app, httpBackend, appConfig, retentionFilter
 from mcm.retentionManager.Exceptions import HttpError
-import mcm.retentionManager.retentionFilter
 
 """WSGI application for the proxy server."""
 

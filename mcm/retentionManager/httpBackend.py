@@ -13,7 +13,6 @@
 """
 import logging
 import requests
-import io
 from mcm.retentionManager import appConfig
 
 log = logging.getLogger(__name__)
