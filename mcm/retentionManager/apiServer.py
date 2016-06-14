@@ -35,6 +35,11 @@ def log_requests(f):
 	return logging_wrapper
 
 
+@app.after_request
+def add_mcm_id(response):
+    response.headers["MCM-Service-Type"] = "retention"
+    return response
+
 ##############################################################################
 # helpers
 ##############################################################################
