@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/MCM-retentionManager.iml" filepath="$PROJECT_DIR$/.idea/MCM-retentionManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mcm-retentionManager.iml" filepath="$PROJECT_DIR$/.idea/mcm-retentionManager.iml" />
     </modules>
   </component>
 </project>
